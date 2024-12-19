@@ -11,11 +11,11 @@
         | 0.565     | -0.716     | 0.565     |
         
     * activation function
-        ```javascript=
+        ```javascript
         Math.abs(1.2 * x)
         ```
         * 必須限制輸出在[0, 1]之間，所以最後取
-        ```javascript=
+        ```javascript
         Math.min(1, Math.abs(1.2*x));
         ```
 
