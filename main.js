@@ -13,7 +13,7 @@ let cur_alpha = new Array(ROWS).fill().map(_ => new Array(COLS).fill(0));
 let nxt_alpha = new Array(ROWS).fill().map(_ => new Array(COLS).fill(0));
 
 let rgb = [0 / 255, 170 / 255, 255 / 255];
-let conv_matrix = [
+let kernal = [
     [0.565, -0.716, 0.565],
     [-0.716, 0.627, -0.716],
     [0.565, -0.716, 0.565]
@@ -35,35 +35,35 @@ function convolution(r, c){
     let sum = 0;
     for(let i = 0; i < 3; ++i){
         for(let j = 0; j < 3; ++j){
-            sum += cur_alpha[(r + i - 1 + ROWS) % ROWS][(c + j - 1 + COLS) % COLS] * conv_matrix[i][j];
+            sum += cur_alpha[(r + i - 1 + ROWS) % ROWS][(c + j - 1 + COLS) % COLS] * kernal[i][j];
         }
     }
     return sum;
 }
 
 function update(){
-    /*let k = gpu.createKernel(function (cur_alpha, conv_matrix) {
+    /*let k = gpu.createKernel(function (cur_alpha, kernal) {
         let ROWS = this.output.y;
         let COLS = this.output.x;
         let r = this.thread.y;
         let c = this.thread.x;
         let sum = 0;
     
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * conv_matrix[0][0];
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][c] * conv_matrix[0][1];
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * conv_matrix[0][2];
-        sum += cur_alpha[r][(c - 1 + COLS) % COLS] * conv_matrix[1][0];
-        sum += cur_alpha[r][c] * conv_matrix[1][1];
-        sum += cur_alpha[r][(c + 1 + COLS) % COLS] * conv_matrix[1][2];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * conv_matrix[2][0];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][c] * conv_matrix[2][1];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * conv_matrix[2][2];
+        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * kernal[0][0];
+        sum += cur_alpha[(r - 1 + ROWS) % ROWS][c] * kernal[0][1];
+        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * kernal[0][2];
+        sum += cur_alpha[r][(c - 1 + COLS) % COLS] * kernal[1][0];
+        sum += cur_alpha[r][c] * kernal[1][1];
+        sum += cur_alpha[r][(c + 1 + COLS) % COLS] * kernal[1][2];
+        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * kernal[2][0];
+        sum += cur_alpha[(r + 1 + ROWS) % ROWS][c] * kernal[2][1];
+        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * kernal[2][2];
     
     
         return Math.min(1, Math.abs(1.2*sum));
     }).setOutput([COLS, ROWS]);
 
-    cur_alpha = k(cur_alpha, conv_matrix);
+    cur_alpha = k(cur_alpha, kernal);
     k.destroy();*/
     
     for(let r = 0; r < ROWS; ++r){
