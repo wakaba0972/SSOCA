@@ -4,7 +4,7 @@ canvas.height = window.innerHeight;
 
 const HEIGHT = canvas.height;
 const WIDTH = canvas.width;
-const BLOCK_SIZE = 5;
+const BLOCK_SIZE = 3;
 const ROWS = Math.floor(HEIGHT / BLOCK_SIZE);
 const COLS = Math.floor(WIDTH / BLOCK_SIZE);
 
