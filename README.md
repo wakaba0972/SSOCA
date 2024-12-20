@@ -2,7 +2,7 @@
 * 渲染的部分利用[gpu.js](https://github.com/gpujs/gpu.js)加速
 * 利用Neural Cellular Automata製成
 * 參數:
-    * kernel
+    * Kernel
 
         |  |  |  |
         | -------- | -------- | -------- |
@@ -11,14 +11,14 @@
         | 0.565     | -0.716     | 0.565     |
 
         ```javascript
-        const kernal = [
+        const KERNAL = [
             [0.565, -0.716, 0.565],
             [-0.716, 0.627, -0.716],
             [0.565, -0.716, 0.565]
         ]
         ```
         
-    * activation function
+    * Activation Function
         ```javascript
         Math.abs(1.2 * x)
         ```
