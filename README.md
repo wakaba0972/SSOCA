@@ -1,5 +1,6 @@
 # Wave.js
-* 渲染的部分利用[gpu.js](https://github.com/gpujs/gpu.js)加速
+* 你可以使用[Lively Wallpaper](https://apps.microsoft.com/detail/9ntm2qc6qws7?hl=en-US&gl=US)或其他類似軟體，將其設定為電腦桌布。
+* 畫面渲染使用[gpu.js](https://github.com/gpujs/gpu.js)加速
 * 利用Neural Cellular Automata製成
 * 參數:
     * Kernel
