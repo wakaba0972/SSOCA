@@ -3,7 +3,7 @@
 * 畫面渲染使用[gpu.js](https://github.com/gpujs/gpu.js)加速。
 * 利用Neural Cellular Automata製成。
 * `BLOCK_SIZE`預設為`1`，如果覺得fps太低，可以把它調高看看。
-* 若動畫速度太快，你可以設置DELAY時間。
+* 若動畫速度太快，你可以設置`DELAY`時間。
 * 參數:
     * Kernel
 
