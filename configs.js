@@ -7,9 +7,14 @@ const BLOCK_SIZE = 1;
 // 格子顏色
 const RGB = [255, 237, 41];
 
-// 卷積核
+// Kernal
 const KERNAL = [
     [0.565, -0.716, 0.565],
     [-0.716, 0.627, -0.716],
     [0.565, -0.716, 0.565]
 ]
+
+// Activation Function
+function activation(x){
+    return Math.abs(1.2*x);
+}

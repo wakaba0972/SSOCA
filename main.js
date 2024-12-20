@@ -13,16 +13,16 @@ const gpu = initGPU({canvas, context: gl});
 let cur_alpha = new Array(ROWS).fill().map(_ => new Float64Array(COLS).fill(0));
 let nxt_alpha = new Array(ROWS).fill().map(_ => new Float64Array(COLS).fill(0));
 
-function activation(x){
-    return Math.min(1, Math.abs(1.2*x));
-}
-
 function rand_alpha(){
     for(let r = 0; r < ROWS; ++r){
         for(let c = 0; c < COLS; ++c){
             cur_alpha[r][c] = (Math.random()<0.5?-1:1)*Math.random();
         }
     }
+}
+
+function fix_value(x){
+    return Math.max(0, Math.min(1, x));
 }
 
 function convolution(r, c){
@@ -48,7 +48,7 @@ function convolution(r, c){
 function update(){
     for(let r = 0; r < ROWS; ++r){
         for(let c = 0; c < COLS; ++c){
-            nxt_alpha[r][c] = activation(convolution(r, c));
+            nxt_alpha[r][c] = fix_value(activation(convolution(r, c)));
         }
     }
 
