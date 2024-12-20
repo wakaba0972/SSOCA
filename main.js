@@ -6,6 +6,7 @@ const HEIGHT = canvas.height;
 const WIDTH = canvas.width;
 const ROWS = Math.floor(HEIGHT / BLOCK_SIZE);
 const COLS = Math.floor(WIDTH / BLOCK_SIZE);
+const REAL_RGB = RGB.map(x => x / 255);
 const gl = canvas.getContext('webgl2', { premultipliedAlpha: false });
 
 const gpu = initGPU({canvas, context: gl});
@@ -31,15 +32,15 @@ function convolution(r, c){
     const ca = (c==COLS-1? 0: c+1);
     let sum = 0;
 
-    sum += cur_alpha[rm][cm] * kernal[0][0];
-    sum += cur_alpha[rm][c] * kernal[0][1];
-    sum += cur_alpha[rm][ca] * kernal[0][2];
-    sum += cur_alpha[r][cm] * kernal[1][0];
-    sum += cur_alpha[r][c] * kernal[1][1];
-    sum += cur_alpha[r][ca] * kernal[1][2];
-    sum += cur_alpha[ra][cm] * kernal[2][0];
-    sum += cur_alpha[ra][c] * kernal[2][1];
-    sum += cur_alpha[ra][ca] * kernal[2][2];
+    sum += cur_alpha[rm][cm] * KERNAL[0][0];
+    sum += cur_alpha[rm][c] * KERNAL[0][1];
+    sum += cur_alpha[rm][ca] * KERNAL[0][2];
+    sum += cur_alpha[r][cm] * KERNAL[1][0];
+    sum += cur_alpha[r][c] * KERNAL[1][1];
+    sum += cur_alpha[r][ca] * KERNAL[1][2];
+    sum += cur_alpha[ra][cm] * KERNAL[2][0];
+    sum += cur_alpha[ra][c] * KERNAL[2][1];
+    sum += cur_alpha[ra][ca] * KERNAL[2][2];
 
     return sum;
 }
@@ -59,16 +60,16 @@ function update(){
 }
 
 function draw(){
-    const render = gpu.createKernel(function (cur_alpha, rgb) {
+    const render = gpu.createKernel(function (cur_alpha, RGB) {
         this.color(
-            rgb[0], 
-            rgb[1], 
-            rgb[2],
+            RGB[0], 
+            RGB[1], 
+            RGB[2],
             cur_alpha[this.thread.y][this.thread.x]
         );
     }).setOutput([COLS, ROWS]).setGraphical(true);
     
-    render(cur_alpha, rgb);
+    render(cur_alpha, RGB);
     render.destroy();
 }
 
