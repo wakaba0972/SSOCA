@@ -1,7 +1,7 @@
 # Wave.js
 * 你可以使用[Lively Wallpaper](https://apps.microsoft.com/detail/9ntm2qc6qws7?hl=en-US&gl=US)或其他類似軟體，將其設定為電腦桌布。
 * 畫面渲染使用[gpu.js](https://github.com/gpujs/gpu.js)加速。
-* 利用Neural Cellular Automata製成。
+* 利用[Some kinds of automata](https://www.youtube.com/watch?v=3H79ZcBuw4M)製成(似乎不是NCA)。
 * `BLOCK_SIZE`預設為`1`，如果覺得fps太低，可以把它調高看看。
 * 若動畫速度太快，你可以設置`DELAY`時間。
 * 參數:
