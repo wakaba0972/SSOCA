@@ -1,23 +1,16 @@
-let canvas = document.getElementById("canvas");
+const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const HEIGHT = canvas.height;
 const WIDTH = canvas.width;
-const BLOCK_SIZE = 3;
 const ROWS = Math.floor(HEIGHT / BLOCK_SIZE);
 const COLS = Math.floor(WIDTH / BLOCK_SIZE);
+const gl = canvas.getContext('webgl2', { premultipliedAlpha: false });
 
-let gpu = initGPU();
-let cur_alpha = new Array(ROWS).fill().map(_ => new Array(COLS).fill(0));
-let nxt_alpha = new Array(ROWS).fill().map(_ => new Array(COLS).fill(0));
-
-let rgb = [0 / 255, 170 / 255, 255 / 255];
-let kernal = [
-    [0.565, -0.716, 0.565],
-    [-0.716, 0.627, -0.716],
-    [0.565, -0.716, 0.565]
-]
+const gpu = initGPU({canvas, context: gl});
+let cur_alpha = new Array(ROWS).fill().map(_ => new Float64Array(COLS).fill(0));
+let nxt_alpha = new Array(ROWS).fill().map(_ => new Float64Array(COLS).fill(0));
 
 function activation(x){
     return Math.min(1, Math.abs(1.2*x));
@@ -32,68 +25,61 @@ function rand_alpha(){
 }
 
 function convolution(r, c){
+    const rm = (!r? ROWS-1: r-1);
+    const ra = (r==ROWS-1? 0: r+1);
+    const cm = (!c? COLS-1: c-1);
+    const ca = (c==COLS-1? 0: c+1);
     let sum = 0;
-    for(let i = 0; i < 3; ++i){
-        for(let j = 0; j < 3; ++j){
-            sum += cur_alpha[(r + i - 1 + ROWS) % ROWS][(c + j - 1 + COLS) % COLS] * kernal[i][j];
-        }
-    }
+
+    sum += cur_alpha[rm][cm] * kernal[0][0];
+    sum += cur_alpha[rm][c] * kernal[0][1];
+    sum += cur_alpha[rm][ca] * kernal[0][2];
+    sum += cur_alpha[r][cm] * kernal[1][0];
+    sum += cur_alpha[r][c] * kernal[1][1];
+    sum += cur_alpha[r][ca] * kernal[1][2];
+    sum += cur_alpha[ra][cm] * kernal[2][0];
+    sum += cur_alpha[ra][c] * kernal[2][1];
+    sum += cur_alpha[ra][ca] * kernal[2][2];
+
     return sum;
 }
 
 function update(){
-    /*let k = gpu.createKernel(function (cur_alpha, kernal) {
-        let ROWS = this.output.y;
-        let COLS = this.output.x;
-        let r = this.thread.y;
-        let c = this.thread.x;
-        let sum = 0;
-    
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * kernal[0][0];
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][c] * kernal[0][1];
-        sum += cur_alpha[(r - 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * kernal[0][2];
-        sum += cur_alpha[r][(c - 1 + COLS) % COLS] * kernal[1][0];
-        sum += cur_alpha[r][c] * kernal[1][1];
-        sum += cur_alpha[r][(c + 1 + COLS) % COLS] * kernal[1][2];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c - 1 + COLS) % COLS] * kernal[2][0];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][c] * kernal[2][1];
-        sum += cur_alpha[(r + 1 + ROWS) % ROWS][(c + 1 + COLS) % COLS] * kernal[2][2];
-    
-    
-        return Math.min(1, Math.abs(1.2*sum));
-    }).setOutput([COLS, ROWS]);
-
-    cur_alpha = k(cur_alpha, kernal);
-    k.destroy();*/
-    
     for(let r = 0; r < ROWS; ++r){
         for(let c = 0; c < COLS; ++c){
             nxt_alpha[r][c] = activation(convolution(r, c));
         }
     }
 
-    [cur_alpha, nxt_alpha] = [nxt_alpha, cur_alpha];
+    for(let r = 0; r < ROWS; ++r){
+        for(let c = 0; c < COLS; ++c){
+            cur_alpha[r][c] = nxt_alpha[r][c];
+        }
+    }
 }
 
 function draw(){
-    let render = gpu.createKernel(function (cur_alpha, rgb) {
+    const render = gpu.createKernel(function (cur_alpha, rgb) {
         this.color(
-            rgb[0] * cur_alpha[this.thread.y][this.thread.x], 
-            rgb[1] * cur_alpha[this.thread.y][this.thread.x], 
-            rgb[2] * cur_alpha[this.thread.y][this.thread.x]
+            rgb[0], 
+            rgb[1], 
+            rgb[2],
+            cur_alpha[this.thread.y][this.thread.x]
         );
     }).setOutput([COLS, ROWS]).setGraphical(true);
     
     render(cur_alpha, rgb);
-    document.getElementsByTagName("canvas")[0].remove();
-    document.body.appendChild(render.canvas);
-
     render.destroy();
 }
 
-function loop(){
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function loop(){
     update();
     draw();
+    await sleep(DELAY);
     requestAnimationFrame(loop);
 }
 
