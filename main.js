@@ -60,16 +60,16 @@ function update(){
 }
 
 function draw(){
-    const render = gpu.createKernel(function (cur_alpha, RGB) {
+    const render = gpu.createKernel(function (cur_alpha, REAL_RGB) {
         this.color(
-            RGB[0], 
-            RGB[1], 
-            RGB[2],
+            REAL_RGB[0], 
+            REAL_RGB[1], 
+            REAL_RGB[2],
             cur_alpha[this.thread.y][this.thread.x]
         );
     }).setOutput([COLS, ROWS]).setGraphical(true);
     
-    render(cur_alpha, RGB);
+    render(cur_alpha, REAL_RGB);
     render.destroy();
 }
 

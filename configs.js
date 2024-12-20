@@ -1,11 +1,11 @@
-// 畫面延遲時間
+// 畫面延遲時間(ms)
 const DELAY = 0;
 
 // 格子大小(越小解析度越高)
 const BLOCK_SIZE = 1;
 
 // 格子顏色
-const RGB = [255 / 255, 237 / 255, 41 / 255];
+const RGB = [255, 237, 41];
 
 // 卷積核
 const KERNAL = [
