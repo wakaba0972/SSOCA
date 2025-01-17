@@ -26,7 +26,7 @@ function fix_value(x){
 }
 
 function convolution(r, c){
-    const rm = (!r? ROWS-1: r-1);
+    /*const rm = (!r? ROWS-1: r-1);
     const ra = (r==ROWS-1? 0: r+1);
     const cm = (!c? COLS-1: c-1);
     const ca = (c==COLS-1? 0: c+1);
@@ -40,9 +40,46 @@ function convolution(r, c){
     sum += cur_alpha[r][ca] * KERNAL[1][2];
     sum += cur_alpha[ra][cm] * KERNAL[2][0];
     sum += cur_alpha[ra][c] * KERNAL[2][1];
-    sum += cur_alpha[ra][ca] * KERNAL[2][2];
+    sum += cur_alpha[ra][ca] * KERNAL[2][2];*/
 
-    return sum;
+    let rm2 = (r-2<0? ROWS+r-2: r-2);
+	let rm1 = (r-1<0? ROWS+r-1: r-1);
+	let ra1 = (r+1>=ROWS? r+1-ROWS: r+1);
+	let ra2 = (r+2>=ROWS? r+2-ROWS: r+2);
+	let cm2 = (c-2<0? COLS+c-2: c-2);
+	let cm1 = (c-1<0? COLS+c-1: c-1);
+	let ca1 = (c+1>=COLS? c+1-COLS: c+1);
+	let ca2 = (c+2>=COLS? c+2-COLS: c+2);
+
+	let sum = 0;
+
+	sum += cur_alpha[rm2][cm2] * KERNAL[0][0];
+	sum += cur_alpha[rm2][cm1] * KERNAL[0][1];
+	sum += cur_alpha[rm2][c] * KERNAL[0][2];
+	sum += cur_alpha[rm2][ca1] * KERNAL[0][3];
+	sum += cur_alpha[rm2][ca2] * KERNAL[0][4];
+	sum += cur_alpha[rm1][cm2] * KERNAL[1][0];
+	sum += cur_alpha[rm1][cm1] * KERNAL[1][1];
+	sum += cur_alpha[rm1][c] * KERNAL[1][2];
+	sum += cur_alpha[rm1][ca1] * KERNAL[1][3];
+	sum += cur_alpha[rm1][ca2] * KERNAL[1][4];
+	sum += cur_alpha[r][cm2] * KERNAL[2][0];
+	sum += cur_alpha[r][cm1] * KERNAL[2][1];
+	sum += cur_alpha[r][c] * KERNAL[2][2];
+	sum += cur_alpha[r][ca1] * KERNAL[2][3];
+	sum += cur_alpha[r][ca2] * KERNAL[2][4];
+	sum += cur_alpha[ra1][cm2] * KERNAL[3][0];
+	sum += cur_alpha[ra1][cm1] * KERNAL[3][1];
+	sum += cur_alpha[ra1][c] * KERNAL[3][2];
+	sum += cur_alpha[ra1][ca1] * KERNAL[3][3];
+	sum += cur_alpha[ra1][ca2] * KERNAL[3][4];
+	sum += cur_alpha[ra2][cm2] * KERNAL[4][0];
+	sum += cur_alpha[ra2][cm1] * KERNAL[4][1];
+	sum += cur_alpha[ra2][c] * KERNAL[4][2];
+	sum += cur_alpha[ra2][ca1] * KERNAL[4][3];
+	sum += cur_alpha[ra2][ca2] * KERNAL[4][4];
+
+	return sum;
 }
 
 function update(){
