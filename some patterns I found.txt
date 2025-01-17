@@ -1,4 +1,4 @@
-# liner (default)
+# liner
 
 const KERNAL = [
     [-0.7, 0.1, 0.7, 0.1, -0.7],

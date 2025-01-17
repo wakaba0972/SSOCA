@@ -2,7 +2,7 @@
 const DELAY = 10;
 
 // 格子大小(越小解析度越高)
-const BLOCK_SIZE = 2;
+const BLOCK_SIZE = 3;
 
 // 格子顏色
 const RGB = [66, 179, 255];

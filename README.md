@@ -28,7 +28,7 @@
     * Activation Function
         ```javascript
         function activation(x){
-            return Math.abs(1.2*x);
+            return Math.abs(0.4*x);  
         }
         ```
         * 必須限制輸出在`[0, 1]`之間，所以最後取以下結果，用戶只需更改`activation()`就好。
